@@ -1,34 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
     <title> Analysis for Influence of Air Pollutant PM2.5 by yelangya</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1> Analysis for Influence of Air Pollutant PM2.5</h1>
-        <h2>This repository is mainly for the analysis in the data science field</h2>
-        <a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h3>
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1> Analysis for Influence of Air Pollutant PM2.5</h1>
+          <p>This repository is mainly for the analysis in the data science field</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/yelangya">yelangya</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h3>
 <a name="author-mengnan" class="anchor" href="#author-mengnan"><span class="octicon octicon-link"></span></a>author: MengNan</h3>
 
 <h3>
@@ -63,12 +73,12 @@ Data</p>
 </pre></div>
 
 <ul>
-<li><p>fips: A five-digit number (represented as a string) indicating the U.S. county</p></li>
-<li><p>SCC: The name of the source as indicated by a digit string (see source code classification table)</p></li>
-<li><p>Pollutant: A string indicating the pollutant</p></li>
-<li><p>Emissions: Amount of PM2.5 emitted, in tons</p></li>
-<li><p>type: The type of source (point, non-point, on-road, or non-road)</p></li>
-<li><p>year: The year of emissions recorded</p></li>
+<li>fips: A five-digit number (represented as a string) indicating the U.S. county</li>
+<li>SCC: The name of the source as indicated by a digit string (see source code classification table)</li>
+<li>Pollutant: A string indicating the pollutant</li>
+<li>Emissions: Amount of PM2.5 emitted, in tons</li>
+<li>type: The type of source (point, non-point, on-road, or non-road)</li>
+<li>year: The year of emissions recorded</li>
 </ul><p>Source Classification Code Table (Source Classification Code.rds): This table provides a mapping from the SCC digit strings int he Emissions table to the actual name of the PM2.5 source. The sources are categorized in a few different ways from more general to more specific and you may choose to explore whatever categories you think are most useful. For example, source “10100101” is known as “Ext Comb /Electric Gen /Anthracite Coal /Pulverized Coal”.</p>
 
 <p>You can read each of the two files using the readRDS() function in R. For example, reading in each file can be done with the following code:</p>
@@ -98,9 +108,10 @@ Questions</p>
 
 <p>6.Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in Los Angeles County, California (fips == "06037"). Which city has seen greater changes over time in motor vehicle emissions?</p>
 
-<ul>
-<li>plot1:</li>
-</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+<h3>
+<a name="plot1" class="anchor" href="#plot1"><span class="octicon octicon-link"></span></a>plot1</h3>
+
+<div class="highlight highlight-r"><pre><span class="c1">## read data</span>
 NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
 SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
 
@@ -111,9 +122,10 @@ info1 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class
 ggplot<span class="p">(</span>data<span class="o">=</span>info1<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>TotalEmissions<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">)</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"Total PM2.5 emission"</span><span class="p">)</span>
 </pre></div>
 
-<ul>
-<li>plot2:</li>
-</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+<h3>
+<a name="plot2" class="anchor" href="#plot2"><span class="octicon octicon-link"></span></a>plot2</h3>
+
+<div class="highlight highlight-r"><pre><span class="c1">## read data</span>
 NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
 SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
 
@@ -126,9 +138,10 @@ q <span class="o">&lt;-</span> ggplot<span class="p">(</span>data<span class="o"
 q <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"Total Emissions Of Baltimore City"</span><span class="p">)</span> <span class="o">+</span> ylab<span class="p">(</span><span class="s">"Total Emission"</span><span class="p">)</span>
 </pre></div>
 
-<ul>
-<li>plot3:</li>
-</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+<h3>
+<a name="plot3" class="anchor" href="#plot3"><span class="octicon octicon-link"></span></a>plot3</h3>
+
+<div class="highlight highlight-r"><pre><span class="c1">## read data</span>
 NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
 SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
 
@@ -165,9 +178,10 @@ qq <span class="o">&lt;-</span> ggplot<span class="p">(</span>data<span class="o
 qq <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"The total emission of Baltimore City from 1999-2008 "</span><span class="p">)</span>
 </pre></div>
 
-<ul>
-<li>plot4</li>
-</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+<h3>
+<a name="plot4" class="anchor" href="#plot4"><span class="octicon octicon-link"></span></a>plot4</h3>
+
+<div class="highlight highlight-r"><pre><span class="c1">## read data</span>
 NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
 SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
 
@@ -183,9 +197,10 @@ info3 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class
 ggplot<span class="p">(</span>data<span class="o">=</span>info3<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>Total<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">,</span> position<span class="o">=</span>position_dodge<span class="p">())</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"The emissions from coal combustion-related sources"</span><span class="p">)</span>
 </pre></div>
 
-<ul>
-<li>plot5</li>
-</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+<h3>
+<a name="plot5" class="anchor" href="#plot5"><span class="octicon octicon-link"></span></a>plot5</h3>
+
+<div class="highlight highlight-r"><pre><span class="c1">## read data</span>
 NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
 SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
 
@@ -199,9 +214,10 @@ ggplot<span class="p">(</span>data<span class="o">=</span>info4<span class="p">,
 
 </pre></div>
 
-<ul>
-<li>plot6</li>
-</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+<h3>
+<a name="plot6" class="anchor" href="#plot6"><span class="octicon octicon-link"></span></a>plot6</h3>
+
+<div class="highlight highlight-r"><pre><span class="c1">## read data</span>
 NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
 SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
 
@@ -218,25 +234,10 @@ info5 <span class="o">&lt;-</span> <span class="kp">as.data.frame</span><span cl
 
 ggplot<span class="p">(</span>data<span class="o">=</span>info5<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>Total<span class="p">,</span>fill <span class="o">=</span> Country<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">,</span> position<span class="o">=</span>position_dodge<span class="p">())</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"MotorVehicle Emissions between Baltimore and Los Angeles"</span><span class="p">)</span>
 </pre></div>
-        </section>
+      </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2"></a> is maintained by <a href="https://github.com/yelangya">yelangya</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
     </div>
-
-  
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
   </body>
 </html>
