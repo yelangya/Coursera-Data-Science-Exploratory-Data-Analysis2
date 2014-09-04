@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title> Analysis for Influence of Air Pollutant PM2.5 by yelangya</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1> Analysis for Influence of Air Pollutant PM2.5</h1>
+        <h2>This repository is mainly for the analysis in the data science field</h2>
+        <a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h3>
+<a name="author-mengnan" class="anchor" href="#author-mengnan"><span class="octicon octicon-link"></span></a>author: MengNan</h3>
+
+<h3>
+<a name="date-friday-september-26-2013" class="anchor" href="#date-friday-september-26-2013"><span class="octicon octicon-link"></span></a>date: Friday, September 26, 2013</h3>
+
+<h2>
+<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>Fine particulate matter (PM2.5) is an ambient air pollutant for which there is strong evidence that it is harmful to human health. In the United States, the Environmental Protection Agency (EPA) is tasked with setting national ambient air quality standards for fine PM and for tracking the emissions of this pollutant into the atmosphere. Approximatly every 3 years, the EPA releases its database on emissions of PM2.5. This database is known as the National Emissions Inventory (NEI). You can read more information about the NEI at the EPA National Emissions Inventory web site.</p>
+
+<p>For each year and for each type of PM source, the NEI records how many tons of PM2.5 were emitted from that source over the course of the entire year. The data that you will use for this assignment are for 1999, 2002, 2005, and 2008.
+Data</p>
+
+<h2>
+<a name="information-of-data" class="anchor" href="#information-of-data"><span class="octicon octicon-link"></span></a>Information Of Data</h2>
+
+<p>The data for this assignment are available from the course web site as a single zip file:</p>
+
+<p>Data for Peer Assessment [29Mb]</p>
+
+<p>The zip file contains two files:</p>
+
+<p>PM2.5 Emissions Data (summarySCC_PM25.rds): This file contains a data frame with all of the PM2.5 emissions data for 1999, 2002, 2005, and 2008. For each year, the table contains number of tons of PM2.5 emitted from a specific type of source for the entire year. Here are the first few rows.</p>
+
+<div class="highlight highlight-r"><pre><span class="c1">##     fips      SCC Pollutant Emissions  type year</span>
+<span class="c1">## 4  09001 10100401  PM25-PRI    15.714 POINT 1999</span>
+<span class="c1">## 8  09001 10100404  PM25-PRI   234.178 POINT 1999</span>
+<span class="c1">## 12 09001 10100501  PM25-PRI     0.128 POINT 1999</span>
+<span class="c1">## 16 09001 10200401  PM25-PRI     2.036 POINT 1999</span>
+<span class="c1">## 20 09001 10200504  PM25-PRI     0.388 POINT 1999</span>
+<span class="c1">## 24 09001 10200602  PM25-PRI     1.490 POINT 1999</span>
+</pre></div>
+
+<ul>
+<li><p>fips: A five-digit number (represented as a string) indicating the U.S. county</p></li>
+<li><p>SCC: The name of the source as indicated by a digit string (see source code classification table)</p></li>
+<li><p>Pollutant: A string indicating the pollutant</p></li>
+<li><p>Emissions: Amount of PM2.5 emitted, in tons</p></li>
+<li><p>type: The type of source (point, non-point, on-road, or non-road)</p></li>
+<li><p>year: The year of emissions recorded</p></li>
+</ul><p>Source Classification Code Table (Source Classification Code.rds): This table provides a mapping from the SCC digit strings int he Emissions table to the actual name of the PM2.5 source. The sources are categorized in a few different ways from more general to more specific and you may choose to explore whatever categories you think are most useful. For example, source “10100101” is known as “Ext Comb /Electric Gen /Anthracite Coal /Pulverized Coal”.</p>
+
+<p>You can read each of the two files using the readRDS() function in R. For example, reading in each file can be done with the following code:</p>
+
+<div class="highlight highlight-r"><pre><span class="c1">## This first line will likely take a few seconds. Be patient!</span>
+NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"summarySCC_PM25.rds"</span><span class="p">)</span>
+SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"Source_Classification_Code.rds"</span><span class="p">)</span>
+</pre></div>
+
+<p>as long as each of those files is in your current working directory (check by calling dir() and see if those files are in the listing).
+Assignment</p>
+
+<p>The overall goal of this project is to explore the National Emissions Inventory database and see what it say about fine particulate matter pollution in the United states over the 10-year period 1999–2008. You may use any R package you want to support your analysis.
+Questions</p>
+
+<p>The following questions and tasks in this project analysis are what we mainly concerned. For each question/task I make a single plot. Unless specified, and use certain plotting system in R to make my plot.</p>
+
+<p>1.Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Using the base plotting system, make a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.</p>
+
+<p>2.Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? Use the base plotting system to make a plot answering this question.</p>
+
+<p>3.Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City? Which have seen increases in emissions from 1999–2008? Use the ggplot2 plotting system to make a plot answer this question.</p>
+
+<p>4.Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?</p>
+
+<p>5.How have emissions from motor vehicle sources changed from 1999–2008 in Baltimore City?</p>
+
+<p>6.Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in Los Angeles County, California (fips == "06037"). Which city has seen greater changes over time in motor vehicle emissions?</p>
+
+<ul>
+<li>plot1:</li>
+</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
+SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
+
+total <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>NEI<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>NEI<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>NEI<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>NEI<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>NEI<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>NEI<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>NEI<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>NEI<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span><span class="p">)]))</span>
+year <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>NEI<span class="o">$</span>year<span class="p">)</span>
+Year <span class="o">&lt;-</span> <span class="kp">as.factor</span><span class="p">(</span>year<span class="p">)</span>
+info1 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>TotalEmissions <span class="o">=</span> total<span class="p">,</span> Year<span class="p">)</span>
+ggplot<span class="p">(</span>data<span class="o">=</span>info1<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>TotalEmissions<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">)</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"Total PM2.5 emission"</span><span class="p">)</span>
+</pre></div>
+
+<ul>
+<li>plot2:</li>
+</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
+SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
+
+
+MarylandData <span class="o">&lt;-</span> NEI<span class="p">[</span><span class="kp">which</span><span class="p">(</span>NEI<span class="o">$</span>fips <span class="o">==</span> <span class="s">"24510"</span><span class="p">),]</span>
+total2 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span><span class="p">)]))</span>
+year2 <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>year<span class="p">)</span>
+info2 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>TotalEmissions <span class="o">=</span> total2<span class="p">,</span> Year <span class="o">=</span> <span class="kp">as.factor</span><span class="p">(</span>year2<span class="p">))</span>
+q <span class="o">&lt;-</span> ggplot<span class="p">(</span>data<span class="o">=</span>info2<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>TotalEmissions<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">)</span>
+q <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"Total Emissions Of Baltimore City"</span><span class="p">)</span> <span class="o">+</span> ylab<span class="p">(</span><span class="s">"Total Emission"</span><span class="p">)</span>
+</pre></div>
+
+<ul>
+<li>plot3:</li>
+</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
+SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
+
+MarylandData <span class="o">&lt;-</span> NEI<span class="p">[</span><span class="kp">which</span><span class="p">(</span>NEI<span class="o">$</span>fips <span class="o">==</span> <span class="s">"24510"</span><span class="p">),]</span>
+Type <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>type<span class="p">)</span>
+total21 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">1</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">1</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">1</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">1</span><span class="p">])]))</span>
+year21 <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>year<span class="p">)</span>
+info21 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>Total <span class="o">=</span> total21<span class="p">,</span>Year <span class="o">=</span> year21<span class="p">,</span>Type <span class="o">=</span> <span class="kp">rep</span><span class="p">(</span>Type<span class="p">[</span><span class="m">1</span><span class="p">],</span>times <span class="o">=</span> <span class="m">4</span><span class="p">))</span>
+
+
+Type <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>type<span class="p">)</span>
+total22 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">2</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">2</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">2</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">2</span><span class="p">])]))</span>
+year22 <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>year<span class="p">)</span>
+info22 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>Total <span class="o">=</span> total22<span class="p">,</span>Year <span class="o">=</span> year22<span class="p">,</span>Type <span class="o">=</span> <span class="kp">rep</span><span class="p">(</span>Type<span class="p">[</span><span class="m">2</span><span class="p">],</span>times <span class="o">=</span> <span class="m">4</span><span class="p">))</span>
+
+
+Type <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>type<span class="p">)</span>
+total23 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">3</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">3</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">3</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">3</span><span class="p">])]))</span>
+year23 <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>year<span class="p">)</span>
+info23 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>Total <span class="o">=</span> total23<span class="p">,</span>Year <span class="o">=</span> year23<span class="p">,</span>Type <span class="o">=</span> <span class="kp">rep</span><span class="p">(</span>Type<span class="p">[</span><span class="m">3</span><span class="p">],</span>times <span class="o">=</span> <span class="m">4</span><span class="p">))</span>
+
+
+Type <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>type<span class="p">)</span>
+total24 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">4</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">4</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">4</span><span class="p">])]),</span><span class="kp">sum</span><span class="p">(</span>MarylandData<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MarylandData<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span> <span class="o">&amp;</span> MarylandData<span class="o">$</span>type <span class="o">==</span> Type<span class="p">[</span><span class="m">4</span><span class="p">])]))</span>
+year24 <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>MarylandData<span class="o">$</span>year<span class="p">)</span>
+info24 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>Total <span class="o">=</span> total24<span class="p">,</span>Year <span class="o">=</span> year24<span class="p">,</span>Type <span class="o">=</span> <span class="kp">rep</span><span class="p">(</span>Type<span class="p">[</span><span class="m">4</span><span class="p">],</span>times <span class="o">=</span> <span class="m">4</span><span class="p">))</span>
+
+Info <span class="o">&lt;-</span> <span class="kp">as.data.frame</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span><span class="kt">data.frame</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span>info21<span class="p">),</span><span class="kp">t</span><span class="p">(</span>info22<span class="p">),</span><span class="kp">t</span><span class="p">(</span>info23<span class="p">),</span><span class="kp">t</span><span class="p">(</span>info24<span class="p">))))</span>
+Info<span class="o">$</span>Total <span class="o">&lt;-</span> <span class="kp">as.numeric</span><span class="p">(</span><span class="kp">as.character</span><span class="p">(</span>Info<span class="o">$</span>Total<span class="p">))</span>
+<span class="c1">#Info$Year &lt;- as.numeric(as.character(Info$Year))</span>
+<span class="kp">row.names</span><span class="p">(</span>Info<span class="p">)</span> <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">()</span>
+
+qq <span class="o">&lt;-</span> ggplot<span class="p">(</span>data<span class="o">=</span>Info<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>Total<span class="p">,</span> fill<span class="o">=</span>Type<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">,</span> position<span class="o">=</span>position_dodge<span class="p">())</span>
+qq <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"The total emission of Baltimore City from 1999-2008 "</span><span class="p">)</span>
+</pre></div>
+
+<ul>
+<li>plot4</li>
+</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
+SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
+
+
+temp <span class="o">&lt;-</span> SCC<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">"Combustion"</span><span class="p">,</span>SCC<span class="o">$</span>SCC.Level.One<span class="p">),]</span>
+Coaldata <span class="o">&lt;-</span> temp<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">"Coal"</span><span class="p">,</span>temp<span class="o">$</span>SCC.Level.Three<span class="p">),]</span>
+total3 <span class="o">&lt;-</span> NEI<span class="p">[</span>NEI<span class="o">$</span>SCC <span class="o">%in%</span> Coaldata<span class="o">$</span>SCC<span class="p">,]</span>
+year3 <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>total3<span class="o">$</span>year<span class="p">)</span>
+total3 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>total3<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>total3<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>total3<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>total3<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>total3<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>total3<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>total3<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>total3<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span><span class="p">)]))</span>
+
+info3 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>Total <span class="o">=</span> total3<span class="p">,</span>Year <span class="o">=</span> <span class="kp">as.factor</span><span class="p">(</span>year3<span class="p">))</span>
+
+ggplot<span class="p">(</span>data<span class="o">=</span>info3<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>Total<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">,</span> position<span class="o">=</span>position_dodge<span class="p">())</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"The emissions from coal combustion-related sources"</span><span class="p">)</span>
+</pre></div>
+
+<ul>
+<li>plot5</li>
+</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
+SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
+
+
+temp <span class="o">&lt;-</span> SCC<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">"Mobile Sources"</span><span class="p">,</span>SCC<span class="o">$</span>SCC.Level.One<span class="p">),]</span>
+MaryMobile <span class="o">&lt;-</span> MarylandData<span class="p">[</span>MarylandData<span class="o">$</span>SCC <span class="o">%in%</span> temp<span class="o">$</span>SCC<span class="p">,]</span>
+total4 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>MaryMobile<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MaryMobile<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>MaryMobile<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MaryMobile<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>MaryMobile<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MaryMobile<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>MaryMobile<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>MaryMobile<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span><span class="p">)]))</span>
+info4 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>Total <span class="o">=</span> total4<span class="p">,</span>Year <span class="o">=</span> <span class="kp">as.factor</span><span class="p">(</span>year3<span class="p">))</span>
+
+ggplot<span class="p">(</span>data<span class="o">=</span>info4<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>Total<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">,</span> position<span class="o">=</span>position_dodge<span class="p">())</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"MotorVehicle emissions from 1999â2008 in Baltimore"</span><span class="p">)</span>
+
+</pre></div>
+
+<ul>
+<li>plot6</li>
+</ul><div class="highlight highlight-r"><pre><span class="c1">## read data</span>
+NEI <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/summarySCC_PM25.rds"</span><span class="p">)</span>
+SCC <span class="o">&lt;-</span> <span class="kp">readRDS</span><span class="p">(</span><span class="s">"./exdata-data-NEI_data/Source_Classification_Code.rds"</span><span class="p">)</span>
+
+LosAngelesData <span class="o">&lt;-</span> NEI<span class="p">[</span><span class="kp">which</span><span class="p">(</span>NEI<span class="o">$</span>fips <span class="o">==</span> <span class="s">"06037"</span><span class="p">),]</span>
+
+temp <span class="o">&lt;-</span> SCC<span class="p">[</span><span class="kp">grep</span><span class="p">(</span><span class="s">"Mobile Sources"</span><span class="p">,</span>SCC<span class="o">$</span>SCC.Level.One<span class="p">),]</span>
+LosAngelesMobile <span class="o">&lt;-</span> LosAngelesData<span class="p">[</span>LosAngelesData<span class="o">$</span>SCC <span class="o">%in%</span> temp<span class="o">$</span>SCC<span class="p">,]</span>
+total5 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>LosAngelesMobile<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>LosAngelesMobile<span class="o">$</span>year <span class="o">==</span> <span class="m">1999</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>LosAngelesMobile<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>LosAngelesMobile<span class="o">$</span>year <span class="o">==</span> <span class="m">2002</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>LosAngelesMobile<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>LosAngelesMobile<span class="o">$</span>year <span class="o">==</span> <span class="m">2005</span><span class="p">)]),</span><span class="kp">sum</span><span class="p">(</span>LosAngelesMobile<span class="o">$</span>Emissions<span class="p">[</span><span class="kp">which</span><span class="p">(</span>LosAngelesMobile<span class="o">$</span>year <span class="o">==</span> <span class="m">2008</span><span class="p">)]))</span>
+
+info5 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>Total <span class="o">=</span> total5<span class="p">,</span>Year <span class="o">=</span> <span class="kp">as.factor</span><span class="p">(</span>year3<span class="p">),</span> Country <span class="o">=</span> <span class="kp">rep</span><span class="p">(</span><span class="s">"LosAngeles"</span><span class="p">,</span>times <span class="o">=</span> <span class="m">4</span><span class="p">))</span>
+info4 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>info4<span class="p">,</span> Country <span class="o">=</span> <span class="kp">rep</span><span class="p">(</span><span class="s">"Baltimore"</span><span class="p">,</span> times <span class="o">=</span> <span class="m">4</span><span class="p">))</span>
+info5 <span class="o">&lt;-</span> <span class="kp">as.data.frame</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span><span class="kt">data.frame</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span>info4<span class="p">),</span> <span class="kp">t</span><span class="p">(</span>info5<span class="p">))))</span>
+<span class="kp">row.names</span><span class="p">(</span>info5<span class="p">)</span> <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">()</span>
+
+ggplot<span class="p">(</span>data<span class="o">=</span>info5<span class="p">,</span> aes<span class="p">(</span>x<span class="o">=</span>Year<span class="p">,</span> y<span class="o">=</span>Total<span class="p">,</span>fill <span class="o">=</span> Country<span class="p">))</span> <span class="o">+</span> geom_bar<span class="p">(</span>stat<span class="o">=</span><span class="s">"identity"</span><span class="p">,</span> position<span class="o">=</span>position_dodge<span class="p">())</span> <span class="o">+</span> ggtitle<span class="p">(</span><span class="s">"MotorVehicle Emissions between Baltimore and Los Angeles"</span><span class="p">)</span>
+</pre></div>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/yelangya/Coursera-Data-Science-Exploratory-Data-Analysis2"></a> is maintained by <a href="https://github.com/yelangya">yelangya</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
